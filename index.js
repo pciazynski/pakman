@@ -7,6 +7,7 @@ let score = 0;
 let scoreText;
 let evil;
 let evil2;
+let evil3;
 
 function collectStar(p, ball) {
   ball.disableBody(true, true);
@@ -68,6 +69,10 @@ function create() {
   evil2.body.setAllowGravity(false);
   evil2.setVelocityY(-120);
 
+  evil3 = this.physics.add.sprite(-400, 280, 'evil');
+  evil3.body.setAllowGravity(false);
+  evil3.setVelocityX(250);
+
   balls = this.physics.add.group({
     key: 'bomb',
     repeat: 11,
@@ -84,6 +89,7 @@ function create() {
 
   this.physics.add.overlap(player, evil, gameOver, null, this);
   this.physics.add.overlap(player, evil2, gameOver, null, this);
+  this.physics.add.overlap(player, evil3, gameOver, null, this);
   this.physics.add.overlap(player, balls, collectStar, null, this);
   this.physics.add.overlap(player, balls2, collectStar, null, this);
   this.physics.add.collider(player, platforms);

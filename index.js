@@ -4,6 +4,7 @@ let cursors;
 let balls;
 let score = 0;
 let scoreText;
+let evil;
 
 function collectStar(p, ball) {
   ball.disableBody(true, true);
@@ -13,12 +14,19 @@ function collectStar(p, ball) {
   scoreText.setText(`Score: ${score}`);
 }
 
+function gameOver(p, ball) {
+  player.disableBody(true, true);
+
+  this.add.text(200, 150, 'Game Over!!!', { fontSize: '96px', fill: '#f02' });
+}
+
 function preload() {
   this.load.image('sky', 'assets/sky.png');
   this.load.image('brick1', 'assets/brick1.png');
   this.load.image('brick2', 'assets/brick2.png');
   this.load.image('brick3', 'assets/brick3.png');
   this.load.image('bomb', 'assets/bomb.png');
+  this.load.image('evil', 'assets/evil.png');
 }
 
 function create() {
@@ -50,6 +58,10 @@ function create() {
   player = this.physics.add.sprite(100, 280, 'brick1');
   player.body.setAllowGravity(false);
 
+  evil = this.physics.add.sprite(250, 10, 'evil');
+  evil.body.setAllowGravity(false);
+  evil.setVelocityY(100);
+
   balls = this.physics.add.group({
     key: 'bomb',
     repeat: 11,
@@ -57,6 +69,7 @@ function create() {
     allowGravity: false,
   });
 
+  this.physics.add.overlap(player, evil, gameOver, null, this);
   this.physics.add.overlap(player, balls, collectStar, null, this);
   this.physics.add.collider(player, platforms);
 

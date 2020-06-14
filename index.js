@@ -2,9 +2,11 @@ let platforms;
 let player;
 let cursors;
 let balls;
+let balls2;
 let score = 0;
 let scoreText;
 let evil;
+let evil2;
 
 function collectStar(p, ball) {
   ball.disableBody(true, true);
@@ -62,6 +64,10 @@ function create() {
   evil.body.setAllowGravity(false);
   evil.setVelocityY(100);
 
+  evil2 = this.physics.add.sprite(605, 700, 'evil');
+  evil2.body.setAllowGravity(false);
+  evil2.setVelocityY(-120);
+
   balls = this.physics.add.group({
     key: 'bomb',
     repeat: 11,
@@ -69,8 +75,17 @@ function create() {
     allowGravity: false,
   });
 
+  balls2 = this.physics.add.group({
+    key: 'bomb',
+    repeat: 11,
+    setXY: { x: 250, y: 12, stepY: 70 },
+    allowGravity: false,
+  });
+
   this.physics.add.overlap(player, evil, gameOver, null, this);
+  this.physics.add.overlap(player, evil2, gameOver, null, this);
   this.physics.add.overlap(player, balls, collectStar, null, this);
+  this.physics.add.overlap(player, balls2, collectStar, null, this);
   this.physics.add.collider(player, platforms);
 
   scoreText = this.add.text(16, 16, 'score: 0', { fontSize: '42px', fill: '#fff' });

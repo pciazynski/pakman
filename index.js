@@ -1,12 +1,23 @@
 let platforms;
 let player;
 let cursors;
-let ball;
+let balls;
+let score = 0;
+let scoreText;
+
+function collectStar(p, ball) {
+  ball.disableBody(true, true);
+
+  //  Add and update the score
+  score += 10;
+  scoreText.setText(`Score: ${score}`);
+}
 
 function preload() {
   this.load.image('sky', 'assets/sky.png');
   this.load.image('brick1', 'assets/brick1.png');
   this.load.image('brick2', 'assets/brick2.png');
+  this.load.image('brick3', 'assets/brick3.png');
   this.load.image('bomb', 'assets/bomb.png');
 }
 
@@ -15,31 +26,46 @@ function create() {
 
   platforms = this.physics.add.staticGroup();
 
-  platforms.create(600, 400, 'brick2');
-  platforms.create(50, 250, 'brick2');
-  platforms.create(750, 220, 'brick2');
+  platforms.create(0, 240, 'brick2').setScale(2, 1).refreshBody();
+  platforms.create(0, 320, 'brick2').setScale(2, 1).refreshBody();
 
-  platforms.create(50, 50, 'brick2');
-  platforms.create(150, 150, 'brick2');
-  platforms.create(455, 100, 'brick2');
+  platforms.create(430, 240, 'brick2').setScale(1.5, 1).refreshBody();
+  platforms.create(430, 320, 'brick2').setScale(1.5, 1).refreshBody();
 
-  player = this.physics.add.sprite(100, 550, 'brick1');
+  platforms.create(750, 240, 'brick2');
+  platforms.create(750, 320, 'brick2');
+
+  platforms.create(200, 130, 'brick3').setScale(1, 1.3).refreshBody();
+  platforms.create(200, 450, 'brick3').setScale(1, 1.5).refreshBody();
+
+  platforms.create(300, 130, 'brick3').setScale(1, 1.3).refreshBody();
+  platforms.create(300, 450, 'brick3').setScale(1, 1.5).refreshBody();
+
+  platforms.create(560, 130, 'brick3').setScale(1, 1.3).refreshBody();
+  platforms.create(560, 450, 'brick3').setScale(1, 1.5).refreshBody();
+
+  platforms.create(650, 130, 'brick3').setScale(1, 1.3).refreshBody();
+  platforms.create(650, 450, 'brick3').setScale(1, 1.5).refreshBody();
+
+  player = this.physics.add.sprite(100, 280, 'brick1');
   player.body.setAllowGravity(false);
-  player.body.setImmovable(true);
 
-  ball = this.physics.add.sprite(100, 450, 'bomb');
-  ball.setBounce(1.1);
-  ball.setCollideWorldBounds(true);
-  ball.setVelocity(Phaser.Math.Between(-200, 200), 20);
-  ball.allowGravity = false;
+  balls = this.physics.add.group({
+    key: 'bomb',
+    repeat: 11,
+    setXY: { x: 12, y: 280, stepX: 70 },
+    allowGravity: false,
+  });
 
-  this.physics.add.collider(ball, platforms);
-  this.physics.add.collider(ball, player);
+  this.physics.add.overlap(player, balls, collectStar, null, this);
+  this.physics.add.collider(player, platforms);
+
+  scoreText = this.add.text(16, 16, 'score: 0', { fontSize: '42px', fill: '#fff' });
+  cursors = this.input.keyboard.createCursorKeys();
 }
 
-function update() {
-  cursors = this.input.keyboard.createCursorKeys();
 
+function update() {
   if (cursors.left.isDown) {
     player.setVelocityX(-200);
   } else if (cursors.right.isDown) {
@@ -49,8 +75,8 @@ function update() {
   } else if (cursors.down.isDown) {
     player.setVelocityY(200);
   } else {
-    player.setVelocityX(0);
-    player.setVelocityY(0);
+    // player.setVelocityX(0);
+    // player.setVelocityY(0);
   }
 }
 
